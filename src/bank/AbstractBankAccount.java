@@ -24,12 +24,16 @@ public abstract class AbstractBankAccount implements BankAccount {
    * @throws Exception
    */
   public void deposit(final double amount) throws Exception {
+    if (isFrozen) {
+      System.out.println("Account is frozen. Cannot deposit.");
+      return;
+    }
     if (amount <= 0) {
       throw new IllegalArgumentException(
           "The deposit amount must be positive.");
     }
-      this.balance += amount;
-      System.out.printf("Deposited: Php %.2f\n", amount);
+    this.balance += amount;
+    System.out.printf("Deposited: Php %.2f\n", amount);
   }
 
   /**
@@ -37,9 +41,12 @@ public abstract class AbstractBankAccount implements BankAccount {
    * @param amount
    */
   public void withdraw(final double amount) {
+    if (isFrozen) {
+      System.out.println("Account is frozen. Cannot withdraw.");
+      return;
+    }
     if (amount > balance) {
-      throw new IllegalArgumentException(
-          "Insufficient balance.");
+      throw new IllegalArgumentException("Insufficient balance.");
     }
     if (amount < 0) {
       throw new IllegalArgumentException(
@@ -64,4 +71,13 @@ public abstract class AbstractBankAccount implements BankAccount {
   public boolean isFrozen() {
     return isFrozen;
   }
+
+  /**
+   * Sets account to frozen.
+   */
+  public void freezeAccount() {
+    this.isFrozen = true;
+    System.out.println("Account has been frozen.");
+  }
+
 }
