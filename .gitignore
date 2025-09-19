@@ -1,1 +1,6 @@
-/bin//n/build//n/target//n.idea//n*.iml/n.vscode/
+/bin/
+/build/
+/target/
+.idea/
+*.iml
+.vscode/
