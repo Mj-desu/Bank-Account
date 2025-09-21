@@ -1,6 +1,6 @@
 package bank;
 
-final class MyBank {
+final class Main {
     /**
      * Value 500.
      */
@@ -32,7 +32,7 @@ final class MyBank {
     static final int TEST_VAL_100 = 100;
 
 
-    private MyBank() {
+    private Main() {
     }
 
     /**
