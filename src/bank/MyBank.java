@@ -1,26 +1,73 @@
 package bank;
 
 final class MyBank {
-  // Private constructor to prevent instantiation
-  private MyBank() {
-    throw new UnsupportedOperationException(
-        "Utility class should not be instantiated.");
-  }
+    /**
+     * Value 500.
+     */
+    static final int TEST_VAL_500 = 500;
+    /**
+     * Value -100.
+     */
+    static final int TEST_VAL_NEG100 = -100;
+    /**
+     * Value -500.
+     */
+    static final int TEST_VAL_NEG500 = -500;
+    /**
+     * Value -100.
+     */
+    static final int TEST_VAL_1000 = 1000;
+    /**
+     * Value 1500.
+     */
+    static final int TEST_VAL_1500 = 1500;
 
-  /**
-   * Entry point.
-   * @param args
-   * @throws Exception
-   */
-  public static void main(final String[] args) throws Exception {
-    final int initialDeposit = 1000;
-    final int withdrawAmount = 500;
-    SavingsAccount myAccount = new SavingsAccount("MJ");
-    System.out.println(myAccount.getOwnerName());
+    /**
+     * Value 11500.
+     */
+    static final int TEST_VAL_11500 = 11500;
+    /**
+     * Value 100.
+     */
+    static final int TEST_VAL_100 = 100;
 
-    myAccount.deposit(initialDeposit);
 
-    myAccount.withdraw(withdrawAmount);
-  }
+    private MyBank() {
+    }
+
+    /**
+     * Entry point.
+     * @param args
+     * @throws Exception
+     */
+    public static void main(final String[] args) throws Exception {
+
+        SavingsAccount myAccount = new SavingsAccount("MJ");
+        System.out.println(myAccount.getOwnerName());
+
+        // CHECKSTYLE:OFF
+        // Deposit
+        myAccount.deposit(TEST_VAL_1000);
+        myAccount.deposit(0);
+        myAccount.deposit(TEST_VAL_NEG500);
+        System.out.println(myAccount.getBalance());
+
+        // Withdraw
+        myAccount.withdraw(TEST_VAL_500);
+        myAccount.withdraw(TEST_VAL_1500);
+        myAccount.withdraw(TEST_VAL_NEG100);
+
+        // Freeze account
+        myAccount.freezeAccount();
+        myAccount.deposit(TEST_VAL_11500);
+        myAccount.withdraw(TEST_VAL_500);
+
+        //UnFreeze account
+        myAccount.unfreezeAccount();
+        myAccount.withdraw(TEST_VAL_100);
+
+        System.out.println(myAccount.isFrozen());
+        System.out.println(myAccount.getBalance());
+    }
 
 }
