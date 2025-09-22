@@ -19,6 +19,10 @@ class SavingsAccountTest {
    * Data initialization.
    */
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+  /**
+   * Starting deposit for each test.
+   */
+  private final double depositAmount = 1000.0;
 
   @BeforeEach
   void setup() {
@@ -76,7 +80,6 @@ class SavingsAccountTest {
   @Test
   @Tag("withdraw")
   void testWithdrawValidAmount() {
-    final double depositAmount = 1000.0;
     final double withdrawAmount = 500;
     final double expectedOutput = 500;
     final double actualOutput;
@@ -91,7 +94,6 @@ class SavingsAccountTest {
   void testWithdrawInsufficientAmount() {
     final String expectedOutput = "Deposited: Php 1000.00\n"
         + "Insufficient balance.";
-    final double depositAmount = 1000.0;
     final double withdrawAmount = 1500.0;
     testAccount.deposit(depositAmount);
     testAccount.withdraw(withdrawAmount);
@@ -103,7 +105,6 @@ class SavingsAccountTest {
   void testWithdrawNegativeAmount() {
     String expectedOutput = "Deposited: Php 1000.00\n"
         + "The withdrawn amount must be positive.";
-    final double depositAmount = 1000.0;
     final double withdrawAmount = -1500.0;
     testAccount.deposit(depositAmount);
     testAccount.withdraw(withdrawAmount);
@@ -126,7 +127,6 @@ class SavingsAccountTest {
   void testDepositWhenFrozen() {
     String expectedOutput = "Account has been frozen.\r\n"
         + "Account is frozen. Cannot deposit.";
-    final double depositAmount = 1000.0;
     testAccount.freezeAccount();
     testAccount.deposit(depositAmount);
 
@@ -139,7 +139,6 @@ class SavingsAccountTest {
     String expectedOutput = "Deposited: Php 1000.00\n"
         + "Account has been frozen.\r\n"
         + "Account is frozen. Cannot withdraw.";
-    final double depositAmount = 1000.0;
     final double withdrawAmount = 1500.0;
     testAccount.deposit(depositAmount);
     testAccount.freezeAccount();
@@ -154,7 +153,6 @@ class SavingsAccountTest {
     String expectedOutput = "Deposited: Php 1000.00\n"
         + "Account has been frozen.\r\n" + "Account has been unfrozen.\r\n"
         + "Withdrawn: Php 500.00";
-    final double depositAmount = 1000.0;
     final double withdrawAmount = 500.0;
     testAccount.deposit(depositAmount);
     testAccount.freezeAccount();
