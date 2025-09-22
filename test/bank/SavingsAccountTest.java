@@ -1,7 +1,10 @@
 package bank;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -12,54 +15,67 @@ class SavingsAccountTest {
    * Test account variable initialization.
    */
   private SavingsAccount testAccount;
+  /**
+   * Data initialization.
+   */
+  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
   @BeforeEach
   void setup() {
     testAccount = new SavingsAccount("Test");
+    outContent.reset();
+    System.setOut(new PrintStream(outContent));
   }
 
   @Test
   void testShouldReturnOwnerName() {
     String expectedOutput = "Test";
     String actualOutput = testAccount.getOwnerName();
-    assertEquals(expectedOutput, actualOutput,
-        () -> "Expected: " + expectedOutput + ", but got: " + actualOutput);
+    assertEquals(expectedOutput, actualOutput);
+  }
+
+  @Test
+  void testShouldBalance() {
+    final double expectedOutput = 1000.00;
+    double actualOutput;
+    testAccount.deposit(expectedOutput);
+    actualOutput = testAccount.getBalance();
+    assertEquals(expectedOutput, actualOutput);
   }
 
   @Test
   @Tag("deposit")
-  void testShouldReturnDepositedAmount() throws Exception {
+  void testShouldReturnDepositedAmount() {
     final double expectedOutput = 1000.0;
     double actualOutput;
     testAccount.deposit(expectedOutput);
     actualOutput = testAccount.getBalance();
-    assertEquals(expectedOutput, actualOutput,
-        () -> "Expected: " + expectedOutput + ", but got: " + actualOutput);
+    assertEquals(expectedOutput, actualOutput);
   }
 
   @Test
   @Tag("deposit")
-  void testShouldReturnErrorIfAmountIsZero() throws Exception {
+  void testShouldReturnErrorIfAmountIsZero() {
+    String expectedOutput = "The deposit amount must be positive.";
     final double zero = 0;
-    Exception e = assertThrows(IllegalArgumentException.class, () -> {
-      testAccount.deposit(zero);
-    });
-    assertEquals("The deposit amount must be positive.", e.getMessage());
+    testAccount.deposit(zero);
+
+    assertEquals(expectedOutput, outContent.toString().trim());
   }
 
   @Test
   @Tag("deposit")
-  void testShouldReturnErrorIfAmountIsNegative() throws Exception {
+  void testShouldReturnErrorIfAmountIsNegative() {
     final double negVal = -500;
-    Exception e = assertThrows(IllegalArgumentException.class, () -> {
-      testAccount.deposit(negVal);
-    });
-    assertEquals("The deposit amount must be positive.", e.getMessage());
+    String expectedOutput = "The deposit amount must be positive.";
+    testAccount.deposit(negVal);
+    assertEquals(expectedOutput, outContent.toString().trim());
+
   }
 
   @Test
   @Tag("withdraw")
-  void testWithdrawValidAmount() throws Exception {
+  void testWithdrawValidAmount() {
     final double depositAmount = 1000.0;
     final double withdrawAmount = 500;
     final double expectedOutput = 500;
@@ -67,31 +83,84 @@ class SavingsAccountTest {
     testAccount.deposit(depositAmount);
     testAccount.withdraw(withdrawAmount);
     actualOutput = testAccount.getBalance();
-    assertEquals(expectedOutput, expectedOutput,
-        () -> "Expected: " + expectedOutput + ", but got: " + actualOutput);
+    assertEquals(expectedOutput, actualOutput);
   }
 
   @Test
   @Tag("withdraw")
-  void testWithdrawInsufficientAmount() throws Exception {
+  void testWithdrawInsufficientAmount() {
+    final String expectedOutput = "Deposited: Php 1000.00\n"
+        + "Insufficient balance.";
     final double depositAmount = 1000.0;
     final double withdrawAmount = 1500.0;
     testAccount.deposit(depositAmount);
-    Exception e = assertThrows(IllegalArgumentException.class, () -> {
-      testAccount.withdraw(withdrawAmount);
-    });
-    assertEquals("Insufficient balance.", e.getMessage());
+    testAccount.withdraw(withdrawAmount);
+    assertEquals(expectedOutput, outContent.toString().trim());
   }
 
   @Test
   @Tag("withdraw")
-  void testWithdrawNegativeAmount() throws Exception {
+  void testWithdrawNegativeAmount() {
+    String expectedOutput = "Deposited: Php 1000.00\n"
+        + "The withdrawn amount must be positive.";
     final double depositAmount = 1000.0;
     final double withdrawAmount = -1500.0;
     testAccount.deposit(depositAmount);
-    Exception e = assertThrows(IllegalArgumentException.class, () -> {
-      testAccount.withdraw(withdrawAmount);
-    });
-    assertEquals("The withdrawn amount must be positive.", e.getMessage());
+    testAccount.withdraw(withdrawAmount);
+
+    assertEquals(expectedOutput.trim(), outContent.toString().trim());
+  }
+
+  @Test
+  @Tag("FreezeAccount")
+  void testFreezeAccount() {
+    Boolean result;
+    testAccount.freezeAccount();
+    result = testAccount.isFrozen();
+
+    assertTrue(result);
+  }
+
+  @Test
+  @Tag("FreezeAccount")
+  void testDepositWhenFrozen() {
+    String expectedOutput = "Account has been frozen.\r\n"
+        + "Account is frozen. Cannot deposit.";
+    final double depositAmount = 1000.0;
+    testAccount.freezeAccount();
+    testAccount.deposit(depositAmount);
+
+    assertEquals(expectedOutput, outContent.toString().trim());
+  }
+
+  @Test
+  @Tag("FreezeAccount")
+  void testWithdrawWhenFrozen() {
+    String expectedOutput = "Deposited: Php 1000.00\n"
+        + "Account has been frozen.\r\n"
+        + "Account is frozen. Cannot withdraw.";
+    final double depositAmount = 1000.0;
+    final double withdrawAmount = 1500.0;
+    testAccount.deposit(depositAmount);
+    testAccount.freezeAccount();
+    testAccount.withdraw(withdrawAmount);
+
+    assertEquals(expectedOutput, outContent.toString().trim());
+  }
+
+  @Test
+  @Tag("FreezeAccount")
+  void testWithdrawWhenUnFrozen() {
+    String expectedOutput = "Deposited: Php 1000.00\n"
+        + "Account has been frozen.\r\n" + "Account has been unfrozen.\r\n"
+        + "Withdrawn: Php 500.00";
+    final double depositAmount = 1000.0;
+    final double withdrawAmount = 500.0;
+    testAccount.deposit(depositAmount);
+    testAccount.freezeAccount();
+    testAccount.unfreezeAccount();
+    testAccount.withdraw(withdrawAmount);
+
+    assertEquals(expectedOutput, outContent.toString().trim());
   }
 }

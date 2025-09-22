@@ -6,7 +6,7 @@ public interface BankAccount {
    * @param amount
    * @throws Exception
    */
-  void deposit(double amount) throws Exception;
+  void deposit(double amount);
   /**
    * Withdraw amount from bank account.
    * @param amount

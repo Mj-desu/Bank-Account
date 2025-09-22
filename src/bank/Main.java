@@ -40,7 +40,7 @@ final class Main {
      * @param args
      * @throws Exception
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
         SavingsAccount myAccount = new SavingsAccount("MJ");
         System.out.println(myAccount.getOwnerName());
@@ -62,7 +62,7 @@ final class Main {
         myAccount.deposit(TEST_VAL_11500);
         myAccount.withdraw(TEST_VAL_500);
 
-        //UnFreeze account
+        // UnFreeze account
         myAccount.unfreezeAccount();
         myAccount.withdraw(TEST_VAL_100);
 
