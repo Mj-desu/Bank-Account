@@ -1,4 +1,6 @@
 package bank;
+//CODE REVIEWER: KYLE ANGEL RAMIREZ
+//NO CHECKSTYLE VIOLATIONS.
 
 final class Main {
     /**
@@ -45,7 +47,6 @@ final class Main {
         SavingsAccount myAccount = new SavingsAccount("MJ");
         System.out.println(myAccount.getOwnerName());
 
-        // CHECKSTYLE:OFF
         // Deposit
         myAccount.deposit(TEST_VAL_1000);
         myAccount.deposit(0);

@@ -1,5 +1,6 @@
 package bank;
-
+//CODE REVIEWER: KYLE ANGEL RAMIREZ
+//NO CHECKSTYLE VIOLATIONS. ALL REQUIRED METHODS ARE PRESENT.
 public class SavingsAccount extends AbstractBankAccount {
   /**
    * Variable to store owner's name.
